@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo/item.dart';
+import 'model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +20,10 @@ class MyApp extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
+  static List<ToDo> todoList = [
+    ToDo(id: '01', text: 'new item'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -92,35 +98,10 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
+                  for (ToDo item in todoList)
+                    ToDoItem(
+                      todo: item,
                     ),
-                    child: ListTile(
-                      onTap: () {},
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      tileColor: Colors.white,
-                      leading: const Icon(
-                        Icons.check_box,
-                        color: Colors.blue,
-                      ),
-                      title: const Text("Check Box"),
-                      trailing: Container(
-                        height: 35,
-                        width: 35,
-                        color: Colors.red,
-                        child: IconButton(
-                          onPressed: () {},
-                          color: Colors.white,
-                          icon: const Icon(Icons.delete),
-                          iconSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
