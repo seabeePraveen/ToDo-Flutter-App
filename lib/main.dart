@@ -91,7 +91,36 @@ class HomePage extends StatelessWidget {
                         fontSize: 30,
                       ),
                     ),
-                  )
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: ListTile(
+                      onTap: () {},
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      tileColor: Colors.white,
+                      leading: const Icon(
+                        Icons.check_box,
+                        color: Colors.blue,
+                      ),
+                      title: const Text("Check Box"),
+                      trailing: Container(
+                        height: 35,
+                        width: 35,
+                        color: Colors.red,
+                        child: IconButton(
+                          onPressed: () {},
+                          color: Colors.white,
+                          icon: const Icon(Icons.delete),
+                          iconSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
