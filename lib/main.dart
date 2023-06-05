@@ -21,9 +21,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  static List<ToDo> todoList = [
-    ToDo(id: '01', text: 'new item'),
-  ];
+  static List<ToDo> todoList = [];
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -31,6 +29,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _todoController = TextEditingController();
+  List<ToDo> _finalToDo = [];
+
+  @override
+  void initState() {
+    _finalToDo = HomePage.todoList;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +80,8 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(16),
                     color: Colors.white,
                   ),
-                  child: const TextField(
-                    decoration: InputDecoration(
+                  child: TextField(
+                    decoration: const InputDecoration(
                       contentPadding: EdgeInsets.all(0),
                       prefixIcon: Icon(
                         Icons.search,
@@ -90,6 +95,9 @@ class _HomePageState extends State<HomePage> {
                       hintText: "Search",
                       hintStyle: TextStyle(),
                     ),
+                    onChanged: (value) {
+                      _searchbar(value);
+                    },
                   ),
                 ),
                 Expanded(
@@ -107,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      for (ToDo item in HomePage.todoList)
+                      for (ToDo item in _finalToDo)
                         ToDoItem(
                           todo: item,
                           onTap: _ontapitem,
@@ -196,5 +204,20 @@ class _HomePageState extends State<HomePage> {
       ));
     });
     _todoController.clear();
+  }
+
+  void _searchbar(String keyword) {
+    List<ToDo> results = [];
+    if (keyword.isEmpty) {
+      results = HomePage.todoList;
+    } else {
+      results = HomePage.todoList
+          .where((item) =>
+              item.text!.toLowerCase().contains(keyword.toLowerCase()))
+          .toList();
+    }
+    setState(() {
+      _finalToDo = results;
+    });
   }
 }
