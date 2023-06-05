@@ -18,12 +18,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   static List<ToDo> todoList = [
     ToDo(id: '01', text: 'new item'),
   ];
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _todoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,65 +56,145 @@ class HomePage extends StatelessWidget {
         ),
         elevation: 0,
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 15,
-        ),
-        decoration: const BoxDecoration(
-          color: Color(0xFFEEEFF5),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.white,
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(0),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    size: 25,
-                  ),
-                  prefixIconConstraints: BoxConstraints(
-                    maxHeight: 20,
-                    minWidth: 25,
-                  ),
-                  border: InputBorder.none,
-                  hintText: "Search",
-                  hintStyle: TextStyle(),
-                ),
-              ),
+      body: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
             ),
-            Expanded(
-              child: ListView(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 50,
-                      bottom: 25,
+            decoration: const BoxDecoration(
+              color: Color(0xFFEEEFF5),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.white,
+                  ),
+                  child: const TextField(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(0),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        size: 25,
+                      ),
+                      prefixIconConstraints: BoxConstraints(
+                        maxHeight: 20,
+                        minWidth: 25,
+                      ),
+                      border: InputBorder.none,
+                      hintText: "Search",
+                      hintStyle: TextStyle(),
                     ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: 50,
+                          bottom: 25,
+                        ),
+                        child: const Text(
+                          "To-Do's",
+                          style: TextStyle(
+                            fontSize: 30,
+                          ),
+                        ),
+                      ),
+                      for (ToDo item in HomePage.todoList)
+                        ToDoItem(
+                          todo: item,
+                          onTap: _ontapitem,
+                          onDelete: _ondeleteitem,
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      left: 20,
+                      bottom: 20,
+                      right: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.white,
+                          offset: Offset(0.0, 0.0),
+                          blurRadius: 0.0,
+                          spreadRadius: 0.0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      controller: _todoController,
+                      decoration: const InputDecoration(
+                          hintText: "Enter New Item",
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(16)),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(
+                    bottom: 20,
+                    right: 20,
+                  ),
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _addnewitem(_todoController.text);
+                    },
                     child: const Text(
-                      "To-Do's",
+                      "+",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 32,
                       ),
                     ),
                   ),
-                  for (ToDo item in todoList)
-                    ToDoItem(
-                      todo: item,
-                    ),
-                ],
-              ),
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  void _ontapitem(ToDo item) {
+    setState(() {
+      item.isDone = !item.isDone;
+    });
+  }
+
+  void _ondeleteitem(String id) {
+    setState(() {
+      HomePage.todoList.removeWhere((item) => item.id == id);
+    });
+  }
+
+  void _addnewitem(String todo) {
+    setState(() {
+      HomePage.todoList.add(ToDo(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        text: todo,
+      ));
+    });
+    _todoController.clear();
   }
 }
